@@ -7,6 +7,7 @@ import {
   VideoIcon,
   Trophy,
   Sparkles,
+  Palette,
   Film,
   Wand2,
   Grid3x3,
@@ -52,7 +53,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r border-border/50 bg-card/30">
       <SidebarContent className="px-2 py-4">
-        <SidebarGroup>
+        <SidebarGroup role="navigation" aria-label="Main navigation">
           <SidebarMenu className="space-y-1">
             {/* Tavern Dropdown */}
             <Collapsible open={tavernOpen} onOpenChange={setTavernOpen}>
@@ -129,6 +130,16 @@ export function AppSidebar() {
                 <NavLink to="/image">
                   <Sparkles className="w-4 h-4" />
                   <span>Image Gen</span>
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            {/* Aoi Canvas (generative studio) */}
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isActive("/studio")}>
+                <NavLink to="/studio">
+                  <Palette className="w-4 h-4" />
+                  <span>Aoi Canvas</span>
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

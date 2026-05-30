@@ -14,6 +14,7 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useNavigate } from "react-router-dom";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { CommandPaletteHint } from "@/components/CommandPalette";
 
 export function TopBar() {
   const navigate = useNavigate();
@@ -36,6 +37,8 @@ export function TopBar() {
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          <CommandPaletteHint />
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Create new">
@@ -75,13 +78,13 @@ export function TopBar() {
             </Badge>
           </Button>
 
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-card/50 border border-border/50">
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-card/50 border border-border/50">
             <Coins className="w-4 h-4 text-neon-purple" />
             <span className="text-sm font-medium">1,250</span>
           </div>
 
           <Button
-            className="hidden md:flex bg-gradient-to-r from-neon-pink to-neon-purple hover:opacity-90"
+            className="hidden lg:flex bg-gradient-to-r from-neon-pink to-neon-purple hover:opacity-90"
             size="sm"
           >
             Subscribe

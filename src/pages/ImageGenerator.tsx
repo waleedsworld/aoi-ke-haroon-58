@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Wand2, Upload, Download, Heart, Sparkles, Image as ImageIcon, Clock, RotateCcw, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Wand2, Upload, Download, Heart, Sparkles, Image as ImageIcon, Clock, RotateCcw, HelpCircle, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -67,8 +67,8 @@ export default function ImageGenerator() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-6 space-y-6">
+        <div className="flex-1 min-w-0 overflow-y-auto">
+          <div className="p-4 sm:p-6 space-y-6">
             {/* Top Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="w-full max-w-md">
@@ -142,19 +142,31 @@ export default function ImageGenerator() {
 
             {/* Generated Image Display */}
             <Card className="p-6 bg-card/30 backdrop-blur border-border/50">
-              <div className="aspect-video bg-muted/20 rounded-lg flex items-center justify-center mb-4 border-2 border-dashed border-border">
-                <p className="text-muted-foreground">Generated image will appear here</p>
-              </div>
+              {isGenerating ? (
+                <div className="skeleton-shimmer aspect-video rounded-lg mb-4 flex flex-col items-center justify-center gap-3 border border-primary/30">
+                  <Loader2 className="w-9 h-9 text-primary animate-spin" />
+                  <p className="text-sm font-medium text-foreground/90">Conjuring your image…</p>
+                  <p className="text-xs text-muted-foreground">This usually takes a few seconds</p>
+                </div>
+              ) : (
+                <div className="group aspect-video bg-muted/10 rounded-lg flex flex-col items-center justify-center gap-3 mb-4 border-2 border-dashed border-border transition-colors hover:border-primary/50">
+                  <div className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-neon-pink/20 to-neon-purple/20 transition-transform group-hover:scale-110">
+                    <ImageIcon className="w-7 h-7 text-primary" />
+                  </div>
+                  <p className="text-muted-foreground">Your generated image will appear here</p>
+                  <p className="text-xs text-muted-foreground/70">Write a prompt above and hit Generate</p>
+                </div>
+              )}
             </Card>
 
             {/* Model Hub */}
             <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   Model Hub
                   <ChevronDown className="w-5 h-5" />
                 </h3>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Select defaultValue="base">
                     <SelectTrigger className="w-[140px]">
                       <SelectValue />
@@ -179,7 +191,7 @@ export default function ImageGenerator() {
                   </Button>
                 </div>
               </div>
-              <div className="grid grid-cols-6 gap-3 mb-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
                 {mockModels.map((model) => (
                   <Card
                     key={model.id}
@@ -198,12 +210,12 @@ export default function ImageGenerator() {
 
               {/* Spells Section */}
               <div className="border-t border-border/50 pt-6">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                   <h4 className="text-lg font-bold flex items-center gap-2">
                     Spells
                     <HelpCircle className="w-4 h-4 text-muted-foreground" />
                   </h4>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <Select defaultValue="hub">
                       <SelectTrigger className="w-[120px]">
                         <SelectValue />
@@ -228,7 +240,7 @@ export default function ImageGenerator() {
                     </Button>
                   </div>
                 </div>
-                <div className="grid grid-cols-8 gap-3">
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
                   {Array.from({ length: 12 }).map((_, i) => (
                     <Card
                       key={i}
@@ -248,7 +260,7 @@ export default function ImageGenerator() {
             </Card>
 
             {/* Additional Features Sections */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Card className="p-4 bg-card/50 backdrop-blur border-border/50">
                 <h4 className="font-bold mb-3 flex items-center gap-2">
                   Textual Investments / Embeddings

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
 All colors MUST be HSL.
 */
 
@@ -54,6 +54,15 @@ All colors MUST be HSL.
     --neon-purple: 270 80% 65%;
     --neon-cyan: 180 75% 55%;
     --neon-blue: 220 85% 60%;
+
+    /* Signature gradients */
+    --gradient-brand: linear-gradient(135deg, hsl(var(--neon-pink)), hsl(var(--neon-purple)) 55%, hsl(var(--neon-cyan)));
+    --gradient-brand-soft: linear-gradient(135deg, hsl(var(--neon-pink) / 0.18), hsl(var(--neon-cyan) / 0.12));
+    --gradient-sheen: linear-gradient(120deg, transparent 20%, hsl(0 0% 100% / 0.22) 50%, transparent 80%);
+
+    /* Elevation shadows tuned for the dark neon canvas */
+    --shadow-soft: 0 1px 0 hsl(0 0% 100% / 0.04) inset, 0 8px 24px -12px hsl(240 60% 2% / 0.9);
+    --shadow-lift: 0 20px 50px -20px hsl(240 60% 2% / 0.95);
   }
 }
 
@@ -64,48 +73,270 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01", "cv01";
+  }
+
+  /* Distinctive display type for headings */
+  h1, h2, h3, h4, h5, .font-display {
+    font-family: "Chakra Petch", "Sora", ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  /* Ambient neon canvas behind the whole app — additive, no per-page cost */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background:
+      radial-gradient(60rem 60rem at 12% -10%, hsl(var(--neon-pink) / 0.16), transparent 60%),
+      radial-gradient(55rem 55rem at 100% 0%, hsl(var(--neon-cyan) / 0.12), transparent 55%),
+      radial-gradient(70rem 70rem at 50% 120%, hsl(var(--neon-purple) / 0.14), transparent 60%);
+    animation: aurora-drift 22s ease-in-out infinite alternate;
+  }
+
+  /* Faint grid texture for depth */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.4;
+    background-image:
+      linear-gradient(hsl(var(--foreground) / 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--foreground) / 0.03) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black, transparent 85%);
+    mask-image: radial-gradient(ellipse at 50% 30%, black, transparent 85%);
+  }
+
+  ::selection {
+    background: hsl(var(--neon-pink) / 0.35);
+    color: hsl(0 0% 100%);
+  }
+
+  /* Refined focus ring */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring) / 0.7);
   }
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-background;
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-muted rounded-full;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    background-color: hsl(var(--muted));
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary;
+    background-image: var(--gradient-brand);
+    background-clip: padding-box;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
   }
 }
 
 @layer components {
-  /* Neon glow effects */
+  /* Neon glow effects — layered for a richer bloom */
   .glow-pink {
-    box-shadow: 0 0 20px hsl(var(--neon-pink) / 0.3);
+    box-shadow: 0 0 20px hsl(var(--neon-pink) / 0.3), 0 0 60px hsl(var(--neon-pink) / 0.15);
   }
 
   .glow-purple {
-    box-shadow: 0 0 20px hsl(var(--neon-purple) / 0.3);
+    box-shadow: 0 0 20px hsl(var(--neon-purple) / 0.3), 0 0 60px hsl(var(--neon-purple) / 0.15);
   }
 
   .glow-cyan {
-    box-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.3);
+    box-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.3), 0 0 60px hsl(var(--neon-cyan) / 0.15);
   }
 
   /* Hover animations */
   .hover-glow {
-    transition: all 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
   }
 
   .hover-glow:hover {
-    box-shadow: 0 0 30px hsl(var(--primary) / 0.5);
-    transform: translateY(-2px);
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.5), var(--shadow-lift);
+    border-color: hsl(var(--primary) / 0.5);
+    transform: translateY(-3px);
+  }
+
+  /* Brand gradient text */
+  .text-gradient-brand {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Frosted glass surface */
+  .glass-panel {
+    background: hsl(var(--card) / 0.55);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid hsl(var(--foreground) / 0.08);
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* Gradient hairline border via mask */
+  .border-gradient {
+    position: relative;
+  }
+  .border-gradient::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--gradient-brand);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  /* Sheen swipe on hover (pair with overflow-hidden + relative) */
+  .sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-120%);
+    background: var(--gradient-sheen);
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+  .sheen:hover::after {
+    transform: translateX(120%);
+  }
+
+  /* Shimmering skeleton loader */
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    background: hsl(var(--muted) / 0.4);
+  }
+  .skeleton-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.08), transparent);
+    animation: shimmer 1.6s infinite;
+  }
+
+  /* Floating orbs for hero atmospheres */
+  .orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(48px);
+    opacity: 0.5;
+    animation: float 9s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  .animate-float { animation: float 9s ease-in-out infinite; }
+  .animate-shimmer { animation: shimmer 1.6s infinite; }
+  .animate-glow-pulse { animation: glow-pulse 2.8s ease-in-out infinite; }
+  .animate-fade-up { animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .animate-scale-in { animation: scale-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .animate-gradient-x { background-size: 200% 200%; animation: gradient-x 6s ease infinite; }
+  .animate-spin-slow { animation: spin 3.5s linear infinite; }
+}
+
+@keyframes aurora-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(2%, 1%, 0) scale(1.05); }
+  100% { transform: translate3d(-2%, -1%, 0) scale(1.08); }
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50%      { transform: translateY(-18px) translateX(6px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 18px hsl(var(--primary) / 0.35); }
+  50%      { box-shadow: 0 0 40px hsl(var(--primary) / 0.65); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+@layer base {
+  /*
+   * Keyboard focus visibility. The neon theme relies heavily on hover, which
+   * leaves keyboard users lost. Give every interactive element a clear, high
+   * contrast focus ring that only shows for keyboard navigation.
+   */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: calc(var(--radius) - 4px);
+  }
+}
+
+/*
+ * Respect the user's "reduce motion" OS preference. The home cards scale on
+ * hover, the sidebar chevrons rotate, toasts slide, spinners spin — all of
+ * which can trigger vestibular discomfort. Collapse animation/transition
+ * durations to near-zero and neutralise transform-based motion while keeping
+ * the UI fully functional.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hover-glow:hover,
+  .hover\:scale-105:hover {
+    transform: none !important;
   }
 }

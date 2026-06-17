@@ -2,21 +2,28 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { Suspense, lazy } from "react";
+import { RouteFallback } from "@/components/RouteFallback";
+// Keep the language gate (entry route "/") eager so first paint has no Suspense flash.
 import LanguageSelection from "./pages/LanguageSelection";
-import Home from "./pages/Home";
-import QuickCreate from "./pages/QuickCreate";
-import Characters from "./pages/Characters";
-import Chat from "./pages/Chat";
-import ImageGenerator from "./pages/ImageGenerator";
-import VideoGenerator from "./pages/VideoGenerator";
-import ModelHub from "./pages/ModelHub";
-import Tools from "./pages/Tools";
-import History from "./pages/History";
-import Account from "./pages/Account";
-import Settings from "./pages/Settings";
-import NotFound from "./pages/NotFound";
+
+// Lazily load every downstream route so the initial bundle only carries the
+// language gate. Each page (and its heavy deps) is fetched on demand.
+const Home = lazy(() => import("./pages/Home"));
+const QuickCreate = lazy(() => import("./pages/QuickCreate"));
+const Characters = lazy(() => import("./pages/Characters"));
+const Chat = lazy(() => import("./pages/Chat"));
+const ImageGenerator = lazy(() => import("./pages/ImageGenerator"));
+const Studio = lazy(() => import("./pages/Studio"));
+const VideoGenerator = lazy(() => import("./pages/VideoGenerator"));
+const ModelHub = lazy(() => import("./pages/ModelHub"));
+const Tools = lazy(() => import("./pages/Tools"));
+const History = lazy(() => import("./pages/History"));
+const Account = lazy(() => import("./pages/Account"));
+const Settings = lazy(() => import("./pages/Settings"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -27,22 +34,25 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LanguageSelection />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/create/quick" element={<QuickCreate />} />
-            <Route path="/create/advanced" element={<QuickCreate />} />
-            <Route path="/characters" element={<Characters />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/image" element={<ImageGenerator />} />
-            <Route path="/video" element={<VideoGenerator />} />
-            <Route path="/model-hub" element={<ModelHub />} />
-            <Route path="/tools" element={<Tools />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
+              <Route path="/" element={<LanguageSelection />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/create/quick" element={<QuickCreate />} />
+              <Route path="/create/advanced" element={<QuickCreate />} />
+              <Route path="/characters" element={<Characters />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/image" element={<ImageGenerator />} />
+              <Route path="/studio" element={<Studio />} />
+              <Route path="/video" element={<VideoGenerator />} />
+              <Route path="/model-hub" element={<ModelHub />} />
+              <Route path="/tools" element={<Tools />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </LanguageProvider>

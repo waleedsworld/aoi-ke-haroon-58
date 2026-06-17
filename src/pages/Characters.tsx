@@ -98,6 +98,8 @@ export default function Characters() {
                 <img
                   src={character.image}
                   alt={character.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4">

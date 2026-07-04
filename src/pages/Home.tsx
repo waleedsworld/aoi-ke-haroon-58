@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { MessageSquare, Image as ImageIcon, Video, Grid3x3, Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useVariant } from "@/hooks/use-variant";
+import { HeroVariantB } from "@/components/HeroVariantB";
 import animeChar1 from "@/assets/anime-char-1.jpg";
 import animeChar2 from "@/assets/anime-char-2.jpg";
 import animeChar3 from "@/assets/anime-char-3.jpg";
@@ -22,21 +24,26 @@ const categories = ["Events", "Fantasy", "Furry", "Gaming", "Gender: Female", "G
 export default function Home() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const variant = useVariant();
 
   return (
     <MainLayout>
       <div className="max-w-7xl mx-auto space-y-8 relative">
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-          <img src={animeChar1} alt="" className="absolute top-10 left-10 w-72 h-96 object-cover opacity-5" />
-          <img src={animeChar2} alt="" className="absolute top-20 right-20 w-72 h-96 object-cover opacity-5" />
-          <img src={animeChar3} alt="" className="absolute bottom-20 left-1/4 w-72 h-96 object-cover opacity-5" />
-          <img src={animeChar4} alt="" className="absolute bottom-10 right-1/3 w-72 h-96 object-cover opacity-5" />
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+          <img src={animeChar1} alt="" loading="lazy" decoding="async" className="absolute top-10 left-10 w-72 h-96 object-cover opacity-5" />
+          <img src={animeChar2} alt="" loading="lazy" decoding="async" className="absolute top-20 right-20 w-72 h-96 object-cover opacity-5" />
+          <img src={animeChar3} alt="" loading="lazy" decoding="async" className="absolute bottom-20 left-1/4 w-72 h-96 object-cover opacity-5" />
+          <img src={animeChar4} alt="" loading="lazy" decoding="async" className="absolute bottom-10 right-1/3 w-72 h-96 object-cover opacity-5" />
         </div>
 
-        <div className="text-center space-y-4 py-8">
-          <h1 className="text-4xl md:text-5xl font-bold">{t("hero.title")}</h1>
-          <Badge variant="outline" className="text-sm"><span className="mr-1">📱</span> {t("hero.mobile")}</Badge>
-        </div>
+        {variant === "b" ? (
+          <HeroVariantB />
+        ) : (
+          <div className="text-center space-y-4 py-8">
+            <h1 className="text-4xl md:text-5xl font-bold">{t("hero.title")}</h1>
+            <Badge variant="outline" className="text-sm"><span className="mr-1">📱</span> {t("hero.mobile")}</Badge>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <Card className="p-6 hover:scale-105 transition-all cursor-pointer bg-card/50 backdrop-blur border-border/50 hover-glow" onClick={() => navigate("/chat")}>
@@ -98,7 +105,7 @@ export default function Home() {
             {mockCharacters.map((char) => (
               <Card key={char.id} className="overflow-hidden hover:scale-105 transition-all cursor-pointer" onClick={() => navigate("/chat")}>
                 <div className="aspect-[3/4] relative">
-                  <img src={char.image} alt={char.name} className="w-full h-full object-cover" />
+                  <img src={char.image} alt={char.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                   <div className="absolute bottom-0 p-4"><h4 className="font-bold text-white">{char.name}</h4></div>
                 </div>

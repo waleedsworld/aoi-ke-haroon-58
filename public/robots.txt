@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://aoi-ke-haroon-58.pages.dev/sitemap.xml

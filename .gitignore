@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Test artifacts
+coverage
+playwright-report
+test-results
+blob-report
+.playwright
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +29,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Demo capture render artifacts
+scripts/vid

@@ -38,9 +38,9 @@ export default function Chat() {
 
   return (
     <MainLayout>
-      <div className="h-[calc(100vh-120px)] flex gap-4">
+      <div className="flex flex-col lg:flex-row gap-4 lg:h-[calc(100vh-120px)]">
         {/* Characters Sidebar */}
-        <Card className="w-64 p-4 bg-card/50 backdrop-blur border-border/50 overflow-auto">
+        <Card className="w-full lg:w-64 shrink-0 p-4 bg-card/50 backdrop-blur border-border/50 overflow-auto">
           <h3 className="font-bold mb-4">Characters</h3>
           <div className="space-y-2">
             {mockCharacters.map((char) => (
@@ -62,7 +62,7 @@ export default function Chat() {
         </Card>
 
         {/* Chat Area */}
-        <Card className="flex-1 flex flex-col p-6 bg-card/30 backdrop-blur border-border/50">
+        <Card className="flex-1 min-w-0 flex flex-col p-4 sm:p-6 bg-card/30 backdrop-blur border-border/50 min-h-[400px] lg:min-h-0">
           <div className="flex-1 overflow-auto mb-4 space-y-4">
             {messages.map((msg, idx) => (
               <div
@@ -96,7 +96,7 @@ export default function Chat() {
         </Card>
 
         {/* Settings Sidebar */}
-        <Card className="w-80 p-4 bg-card/50 backdrop-blur border-border/50 overflow-auto">
+        <Card className="w-full lg:w-80 shrink-0 p-4 bg-card/50 backdrop-blur border-border/50 overflow-auto">
           <Tabs defaultValue="story">
             <TabsList className="w-full">
               <TabsTrigger value="story" className="flex-1">Story</TabsTrigger>
